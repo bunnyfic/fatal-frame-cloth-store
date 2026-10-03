@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Log in — Shutter &amp; Lace</title>
-<link rel="stylesheet" href="style.css"></head>
+<link rel="stylesheet" href="style.css"><script src="analytics.js"></script></head>
 <body><div class="auth">
-  <aside class="auth-art" style="--img:url(images/hallway.jpg)"><q>The lanterns are lit. Come inside.</q></aside>
+  <aside class="auth-art" style="--img:url(images/shrine.jpg)"><q>The lanterns are lit. Come inside.</q></aside>
   <main class="auth-form">
     <a class="logo" href="/">Shutter <i>&amp;</i> Lace</a>
     <form id="f" novalidate>
@@ -21,6 +21,6 @@ f.addEventListener('submit',async e=>{
   const body=Object.fromEntries(new FormData(f));
   const r=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   const d=await r.json();
-  if(r.ok) location.href=d.redirect||'/'; else msg.textContent=d.error||'Something went wrong.';
+  if(r.ok){track('login',{method:'email'});location.href=d.redirect||'/';} else msg.textContent=d.error||'Something went wrong.';
 });
 </script></body></html>
