@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Dresses — Shutter &amp; Lace</title><link rel="stylesheet" href="style.css"></head>
+<title>Dresses — Shutter &amp; Lace</title><link rel="stylesheet" href="style.css"><script src="analytics.js"></script></head>
 <body class="plain shop-page">
 <header class="topbar">
   <a class="logo" href="/">Shutter <i>&amp;</i> Lace</a>
@@ -26,7 +26,7 @@ function card(p){
   p.sizes.forEach(s=>{const o=document.createElement('option');o.value=o.textContent=s;sel.append(o);});
   const row=document.createElement('div');row.className='prow';
   const add=document.createElement('button');add.className='btn';add.textContent='Add to bag';
-  add.onclick=()=>{Cart.add(p.id,sel.value);toast(p.name+' added to your bag');};
+  add.onclick=()=>{track('add_to_cart',{currency:'USD',value:p.price/100,items:[gaItem(p,1,sel.value)]});Cart.add(p.id,sel.value);toast(p.name+' added to your bag');};
   const buy=document.createElement('button');buy.className='btn fill';buy.textContent='Buy now';
   buy.onclick=()=>{location.href='checkout.html?buy='+p.id+'&size='+encodeURIComponent(sel.value);};
   row.append(add,buy);
