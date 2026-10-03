@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Checkout — Shutter &amp; Lace</title><link rel="stylesheet" href="style.css"></head>
+<title>Checkout — Shutter &amp; Lace</title><link rel="stylesheet" href="style.css"><script src="analytics.js"></script></head>
 <body class="plain shop-page">
 <header class="topbar">
   <a class="logo" href="/">Shutter <i>&amp;</i> Lace</a>
@@ -55,6 +55,7 @@ function render(){
   for(const it of items){const p=PRODUCTS.find(x=>x.id===it.id);if(!p)continue;subtotal+=p.price*it.qty;
     lines.append(row(p.name+' ('+it.size+') x '+it.qty,money(p.price*it.qty),'sline'));}
   const ship=subtotal>=FREE_SHIPPING_OVER?0:SHIPPING_FEE;
+  window.orderInfo={subtotal,ship};
   tot.append(row('Subtotal',money(subtotal)),row('Shipping',ship?money(ship):'Free'),row('Total',money(subtotal+ship),'grand'));
 }
 
@@ -70,6 +71,7 @@ function render(){
     $('main').innerHTML='<h1>Checkout</h1><p class="empty">Your bag is empty.</p><a class="btn fill" href="shop.html">Shop the dresses</a>';return;
   }
   render();
+  track('begin_checkout',{currency:'USD',value:(orderInfo.subtotal+orderInfo.ship)/100,items:items.map(i=>gaItem(PRODUCTS.find(x=>x.id===i.id),i.qty,i.size))});
 })();
 
 $('f').addEventListener('submit',async e=>{
@@ -78,6 +80,7 @@ $('f').addEventListener('submit',async e=>{
   const r=await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   const d=await r.json();
   if(!r.ok){$('msg').textContent=d.error||'Something went wrong.';$('place').disabled=false;return;}
+  track('purchase',{transaction_id:String(d.orderId),currency:'USD',value:(orderInfo.subtotal+orderInfo.ship)/100,shipping:orderInfo.ship/100,items:items.map(i=>gaItem(PRODUCTS.find(x=>x.id===i.id),i.qty,i.size))});
   if(!buyId) Cart.clear();
   const m=$('main');m.textContent='';
   const h=document.createElement('h1');h.textContent='Thank you, your order is placed';
