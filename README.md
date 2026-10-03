@@ -1,32 +1,5 @@
 <div align="center">
 
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#1e1520"/><stop offset="1" stop-color="#3a2a3d"/>
-    </linearGradient>
-    <radialGradient id="glow" cx="0.5" cy="0.55" r="0.55">
-      <stop offset="0" stop-color="#a3222f" stop-opacity="0.28"/><stop offset="1" stop-color="#a3222f" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="rule" x1="0" x2="1">
-      <stop offset="0" stop-color="#a3222f" stop-opacity="0"/><stop offset="0.3" stop-color="#a3222f"/>
-      <stop offset="0.7" stop-color="#a3222f"/><stop offset="1" stop-color="#a3222f" stop-opacity="0"/>
-    </linearGradient>
-  </defs>
-  <rect width="1200" height="320" fill="url(#bg)"/>
-  <rect width="1200" height="320" fill="url(#glow)"/>
-  <g stroke="#f3e9e6" stroke-opacity="0.65" stroke-width="1.5" fill="none">
-    <path d="M36 74V36H74"/><path d="M1126 36H1164V74"/><path d="M36 246V284H74"/><path d="M1164 246V284H1126"/>
-  </g>
-  <g font-size="92" font-style="italic" font-family="'Apple Chancery','Monotype Corsiva','Lucida Calligraphy','URW Chancery L',Georgia,'Times New Roman',serif">
-    <text x="534" y="168" text-anchor="end" fill="#f3e9e6">Shutter</text>
-    <text x="600" y="168" text-anchor="middle" fill="#d3aab1">&amp;</text>
-    <text x="666" y="168" text-anchor="start" fill="#f3e9e6">Lace</text>
-  </g>
-  <rect x="380" y="196" width="440" height="2" fill="url(#rule)"/>
-  <text x="600" y="240" text-anchor="middle" fill="#d3aab1" font-size="26" font-style="italic"
-        font-family="Georgia,'Times New Roman',serif">Fatal Frame inspired clothing, for a night walk through the shrine</text>
-</svg>
-
 <img src="docs/banner.svg" alt="Shutter & Lace: Fatal Frame inspired clothing" width="100%">
 
 <br>
