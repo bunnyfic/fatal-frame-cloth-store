@@ -213,3 +213,7 @@ Shutter & Lace is a fan-inspired project. It is not affiliated with, endorsed by
 *Made for those who walk into the dark with a camera.*
 
 </div>
+GOOGLE ANALYTICS CONNECTION INCLUDED
+<img width="1034" height="547" alt="image" src="https://github.com/user-attachments/assets/564a0453-36cd-46e2-813c-588b839c107f" />
+
+
