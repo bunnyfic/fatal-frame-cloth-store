@@ -1,5 +1,7 @@
+// Google Analytics 4. Paste your Measurement ID below (looks like G-ABC123XYZ9).
 const GA_ID = 'G-40DX618193';
-indow.track = function () {}; // does nothing until GA is configured
+
+window.track = function () {}; // does nothing until GA is configured
 (function () {
   const local = /^(localhost|127\.0\.0\.1|192\.168\.|10\.)/.test(location.hostname);
   if (local || !/^G-[A-Z0-9]{6,}$/.test(GA_ID) || GA_ID === 'G-XXXXXXXXXX') return; // skip dev traffic
@@ -10,10 +12,11 @@ indow.track = function () {}; // does nothing until GA is configured
   window.gtag = function () { dataLayer.push(arguments); };
   gtag('js', new Date());
   gtag('config', GA_ID);
-  window.track = (name, params) => gtag('event', name, params);
+  window.track = (name, params) => { try { gtag('event', name, params); } catch (e) {} };
 })();
- 
+
 // Helper for shop events. price is in cents.
 function gaItem(p, qty = 1, size) {
+  if (!p) return {};
   return { item_id: String(p.id), item_name: p.name, item_variant: size, price: p.price / 100, quantity: qty };
 }
