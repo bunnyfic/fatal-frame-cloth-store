@@ -1,6 +1,5 @@
 <div align="center">
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="320" viewBox="0 0 1200 320" role="img" aria-label="Shutter and Lace" xmlns:c2pa="http://c2pa.org/manifest">
-  
+
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#1e1520"/><stop offset="1" stop-color="#3a2a3d"/>
