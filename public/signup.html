@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sign up — Shutter &amp; Lace</title>
+<link rel="stylesheet" href="style.css"></head>
+<body><div class="auth">
+  <aside class="auth-art" style="--img:url(images/camera.jpg)"><q>Every outfit begins with a walk into the dark.</q></aside>
+  <main class="auth-form">
+    <a class="logo" href="/">Shutter <i>&amp;</i> Lace</a>
+    <form id="f" novalidate>
+      <h1>Create your account</h1><p class="sub">Join to get early access to new arrivals.</p>
+      <label>Username<input name="username" autocomplete="username" required minlength="2"></label><label>Email<input name="email" type="email" autocomplete="email" required></label><label>Password (8+ characters)<input name="password" type="password" autocomplete="new-password" required minlength="8"></label>
+      <p class="msg" id="msg" role="alert"></p>
+      <button class="btn fill" type="submit">Sign up</button>
+      <p class="alt">Already have an account? <a href="login.html">Log in</a></p>
+    </form>
+  </main></div>
+<script>
+const f=document.getElementById('f'),msg=document.getElementById('msg');
+f.addEventListener('submit',async e=>{
+  e.preventDefault(); msg.textContent='';
+  const body=Object.fromEntries(new FormData(f));
+  const r=await fetch('/api/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const d=await r.json();
+  if(r.ok) location.href=d.redirect||'/'; else msg.textContent=d.error||'Something went wrong.';
+});
+</script></body></html>

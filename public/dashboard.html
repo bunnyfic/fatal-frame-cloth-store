@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Your account — Shutter &amp; Lace</title><link rel="stylesheet" href="style.css"></head>
+<body class="dash-page">
+<header class="topbar">
+  <a class="logo" href="/">Shutter <i>&amp;</i> Lace</a>
+  <nav class="nav-side"><a href="shop.html">Shop</a><a href="#" id="out">Log out</a></nav>
+</header>
+<main class="dash">
+  <aside class="card framed profile">
+    <div class="portrait big" id="photo"></div>
+    <h1 id="name"></h1>
+    <p class="handle" id="handle"></p>
+    <a class="btn" href="profile-setup.html">Edit profile</a>
+  </aside>
+  <section class="card framed">
+    <h2>Your details</h2>
+    <dl class="details">
+      <dt>Email</dt><dd id="email"></dd>
+      <dt>Phone</dt><dd id="phone"></dd>
+      <dt>Address</dt><dd id="address"></dd>
+      <dt>Member since</dt><dd id="since"></dd>
+    </dl>
+  </section>
+  <section class="card framed wide">
+    <h2>Your orders</h2>
+    <div id="orders"><p class="empty">Loading...</p></div>
+  </section>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+(async()=>{
+  const r=await fetch('/api/profile'); if(r.status===401) return location.href='login.html';
+  const p=await r.json(); if(!p.profile_complete) return location.href='profile-setup.html';
+  $('photo').style.backgroundImage='url('+p.photo+')';
+  $('name').textContent=p.full_name; $('handle').textContent='@'+p.username;
+  $('email').textContent=p.email; $('phone').textContent=p.phone;
+  $('address').textContent=p.address+', '+p.city+' '+p.postal_code+', '+p.country;
+  $('since').textContent=new Date(p.created_at).toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});
+})();
+(async()=>{
+  const r=await fetch('/api/orders'); const box=$('orders'); box.textContent='';
+  const orders=r.ok?await r.json():[];
+  if(!orders.length){const p=document.createElement('p');p.className='empty';p.textContent='No orders yet.';const a=document.createElement('a');a.className='btn';a.href='shop.html';a.textContent='Shop the dresses';box.append(p,a);return;}
+  for(const o of orders){
+    const el=document.createElement('div');el.className='order';
+    const h=document.createElement('h3');h.textContent='Order #'+o.id+' \u00b7 '+new Date(o.created_at).toLocaleDateString()+' \u00b7 '+o.status;
+    const ul=document.createElement('ul');
+    for(const i of o.items){const li=document.createElement('li');li.textContent=i.name+' ('+i.size+') x '+i.qty;ul.append(li);}
+    const t=document.createElement('p');t.textContent='Total: $'+(o.total/100).toFixed(2);
+    el.append(h,ul,t);box.append(el);
+  }
+})();
+$('out').onclick=e=>{e.preventDefault();fetch('/api/logout',{method:'POST'}).then(()=>location.href='/');};
+</script></body></html>

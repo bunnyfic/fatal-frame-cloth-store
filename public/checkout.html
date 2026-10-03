@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Checkout — Shutter &amp; Lace</title><link rel="stylesheet" href="style.css"></head>
+<body class="plain shop-page">
+<header class="topbar">
+  <a class="logo" href="/">Shutter <i>&amp;</i> Lace</a>
+  <nav class="nav-side"><a href="shop.html">Keep shopping</a><a href="dashboard.html">My account</a></nav>
+</header>
+
+<main class="checkout" id="main">
+  <h1>Checkout</h1>
+  <form class="co-grid" id="f" novalidate>
+    <div>
+      <section class="card framed">
+        <h2>Delivery details</h2>
+        <div class="cols">
+          <label>Full name<input id="name" autocomplete="name" required></label>
+          <label>Phone number<input id="phone" type="tel" autocomplete="tel" required></label>
+        </div>
+        <label>Street address<input id="address" autocomplete="street-address" required></label>
+        <div class="cols">
+          <label>City<input id="city" autocomplete="address-level2" required></label>
+          <label>Postal code<input id="postal" autocomplete="postal-code" required></label>
+        </div>
+        <label>Country<input id="country" autocomplete="country-name" required></label>
+      </section>
+      <section class="card framed" style="margin-top:1.6rem">
+        <h2>Payment</h2>
+        <label class="radio"><input type="radio" checked disabled> Cash on delivery</label>
+        <p class="hint">Online card payment is coming soon. For now you pay when your order arrives.</p>
+      </section>
+    </div>
+    <aside class="card framed summary">
+      <h2>Order summary</h2>
+      <div id="lines"></div>
+      <div class="totals" id="totals"></div>
+      <p class="msg" id="msg" role="alert"></p>
+      <button class="btn fill" id="place" type="submit">Place order</button>
+    </aside>
+  </form>
+</main>
+
+<script src="cart.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const q=new URLSearchParams(location.search);
+const buyId=parseInt(q.get('buy'),10);
+let PRODUCTS=[],items=[];
+
+function row(a,b,cls){const p=document.createElement('p');if(cls)p.className=cls;const x=document.createElement('span'),y=document.createElement('span');x.textContent=a;y.textContent=b;p.append(x,y);return p;}
+
+function render(){
+  const lines=$('lines'),tot=$('totals');lines.textContent='';tot.textContent='';
+  let subtotal=0;
+  for(const it of items){const p=PRODUCTS.find(x=>x.id===it.id);if(!p)continue;subtotal+=p.price*it.qty;
+    lines.append(row(p.name+' ('+it.size+') x '+it.qty,money(p.price*it.qty),'sline'));}
+  const ship=subtotal>=FREE_SHIPPING_OVER?0:SHIPPING_FEE;
+  tot.append(row('Subtotal',money(subtotal)),row('Shipping',ship?money(ship):'Free'),row('Total',money(subtotal+ship),'grand'));
+}
+
+(async()=>{
+  const me=await fetch('/api/profile'); if(me.status===401) return location.href='login.html';
+  const p=await me.json(); if(!p.profile_complete) return location.href='profile-setup.html';
+  $('name').value=p.full_name;$('phone').value=p.phone;$('address').value=p.address;
+  $('city').value=p.city;$('postal').value=p.postal_code;$('country').value=p.country;
+  PRODUCTS=await (await fetch('/api/products')).json();
+  items=buyId?[{id:buyId,size:q.get('size')||'M',qty:Math.min(10,Math.max(1,parseInt(q.get('qty'),10)||1))}]:Cart.get();
+  items=items.filter(i=>PRODUCTS.some(x=>x.id===i.id));
+  if(!items.length){
+    $('main').innerHTML='<h1>Checkout</h1><p class="empty">Your bag is empty.</p><a class="btn fill" href="shop.html">Shop the dresses</a>';return;
+  }
+  render();
+})();
+
+$('f').addEventListener('submit',async e=>{
+  e.preventDefault();$('msg').textContent='';$('place').disabled=true;
+  const body={items,shipping:{name:$('name').value,phone:$('phone').value,address:$('address').value,city:$('city').value,postal:$('postal').value,country:$('country').value}};
+  const r=await fetch('/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const d=await r.json();
+  if(!r.ok){$('msg').textContent=d.error||'Something went wrong.';$('place').disabled=false;return;}
+  if(!buyId) Cart.clear();
+  const m=$('main');m.textContent='';
+  const h=document.createElement('h1');h.textContent='Thank you, your order is placed';
+  const p=document.createElement('p');p.className='empty';p.textContent='Order #'+d.orderId+'. You will pay on delivery. We will contact you on the phone number you gave.';
+  const a=document.createElement('a');a.className='btn fill';a.href='dashboard.html';a.textContent='View my orders';
+  const b=document.createElement('a');b.className='btn';b.href='shop.html';b.textContent='Keep shopping';b.style.marginLeft='.8rem';
+  m.append(h,p,a,b);
+});
+</script></body></html>

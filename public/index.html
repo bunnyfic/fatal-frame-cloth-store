@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shutter &amp; Lace — Fatal Frame inspired clothing</title>
+
+<link rel="stylesheet" href="style.css"></head>
+<body>
+<div class="announce">Free shipping on orders over $80 &nbsp;·&nbsp; New arrivals opening soon</div>
+<header class="nav">
+  <nav class="nav-side l"><a href="#collections">Shop</a><a href="#story">Our story</a></nav>
+  <a class="logo" href="/">Shutter <i>&amp;</i> Lace</a>
+  <nav class="nav-side r" id="acct"><a href="login.html">Log in</a><a href="signup.html">Sign up</a><a href="#" aria-label="Shopping bag">Bag (0)</a></nav>
+</header>
+
+<main>
+<div class="hero">
+  <div class="vf" aria-hidden="true"></div>
+  <div class="hero-inner">
+    <h1>Dressed for a night walk through the shrine</h1>
+    <p>Lace, ribbons and sailor collars inspired by the world of Fatal Frame. Made to be worn, not only photographed.</p>
+    <a class="btn fill" href="#collections">Shop the collections</a><a class="btn" href="signup.html">Create account</a>
+  </div>
+</div>
+
+<div class="trust"><span>Sewn in small batches</span><span>Free shipping over $80</span><span>30-day returns</span><span>Sizes XS to 3XL</span></div>
+
+<section class="intro-band"><p class="intro">Every piece begins with a girl, a camera and a place she should not be. We make the outfits for those stories: dusty plum, ivory lace, and one red ribbon.</p></section>
+
+<section class="collections" id="collections">
+  <h2>The collections</h2><div class="ribbon-rule"></div>
+  <div class="grid">
+    <a class="tile" href="#" style="--img:url(images/ribbon-dress.jpg)"><div><h3>Ribbon Dresses</h3><p>Black chiffon, lace-up sides, satin bows.</p><small>from $58</small></div></a>
+    <a class="tile" href="#" style="--img:url(images/lace-dress.jpg)"><div><h3>Lace Dresses</h3><p>Puff sleeves, floral lace, tie-front bodice.</p><small>from $64</small></div></a>
+    <a class="tile" href="#" style="--img:url(images/plaid-skirt.jpg)"><div><h3>Tiered Skirts</h3><p>Plaid ruffles trimmed in black lace.</p><small>from $42</small></div></a>
+  </div>
+</section>
+
+<section id="story"><div class="story">
+  <img src="images/hallway.jpg" alt="A girl holding a glowing light in a dim wooden hallway" loading="lazy">
+  <div><h2>Soft on the skin, quiet in the dark</h2>
+  <p>Our fabrics are chosen to look right by lantern light: matte cotton, sheer chiffon, delicate lace. Nothing shiny, nothing loud.</p>
+  <p>Full sizing and checkout are coming soon. Create an account to be first through the gate.</p>
+  <a class="btn" href="signup.html">Join the waitlist</a></div>
+</div></section>
+
+<section class="cta-band"><div><h2>Be first to know when we open</h2><p>Create an account and we will save your place.</p><a class="btn fill" href="signup.html">Sign up</a></div></section>
+</main>
+<footer>&copy; 2026 Shutter &amp; Lace. A fan-inspired fashion project, not affiliated with Koei Tecmo.</footer>
+<script>
+fetch('/api/me').then(r=>r.json()).then(({user})=>{
+  if(!user) return;
+  const name=user.username.replace(/[<>&"]/g,'');
+  document.getElementById('acct').innerHTML='<a href="shop.html">Shop</a><a href="dashboard.html">'+name+'</a><a href="#" id="out">Log out</a><a href="#" aria-label="Shopping bag">Bag (0)</a>';
+  document.getElementById('out').onclick=e=>{e.preventDefault();fetch('/api/logout',{method:'POST'}).then(()=>location.reload())};
+});
+</script>
+</body></html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dress — Shutter &amp; Lace</title><link rel="stylesheet" href="style.css"></head>
+<body class="plain shop-page">
+<header class="topbar">
+  <a class="logo" href="/">Shutter <i>&amp;</i> Lace</a>
+  <nav class="nav-side"><a href="shop.html">All dresses</a><a href="dashboard.html">My account</a><a href="#" id="bagbtn">Bag (<span id="count">0</span>)</a></nav>
+</header>
+<main class="detail" id="main">
+  <a class="back" href="shop.html">&larr; Back to the dresses</a>
+  <div class="detail-grid">
+    <div class="pimg big" id="pimg"></div>
+    <div class="info">
+      <h1 id="pname"></h1>
+      <p class="price" id="pprice"></p>
+      <p class="plong" id="pdesc"></p>
+      <p class="lbl">Size</p>
+      <div class="sizes" id="sizes" role="group" aria-label="Size"></div>
+      <p class="lbl">Quantity</p>
+      <div class="qty big"><button id="minus" aria-label="Decrease">&minus;</button><span id="qv">1</span><button id="plus" aria-label="Increase">+</button></div>
+      <div class="prow wide"><button class="btn" id="add">Add to bag</button><button class="btn fill" id="buy">Buy now</button></div>
+      <ul class="perks"><li>Free shipping on orders over $80</li><li>Pay on delivery</li><li>Sizes XS to XL</li></ul>
+    </div>
+  </div>
+  <h2 class="more-h">More dresses</h2>
+  <div class="related" id="related"></div>
+</main>
+<script src="cart.js"></script><script src="bag.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const id=parseInt(new URLSearchParams(location.search).get('id'),10);
+(async()=>{
+  const me=await fetch('/api/profile'); if(me.status===401) return location.href='login.html';
+  if(!(await me.json()).profile_complete) return location.href='profile-setup.html';
+  const products=await (await fetch('/api/products')).json();
+  initBag(products);
+  const p=products.find(x=>x.id===id);
+  if(!p){$('main').innerHTML='<p class="empty">We could not find that dress.</p><a class="btn fill" href="shop.html">Back to the dresses</a>';return;}
+  document.title=p.name+' \u2014 Shutter & Lace';
+  $('pname').textContent=p.name;$('pprice').textContent=money(p.price);$('pdesc').textContent=p.desc;
+  const img=new Image();img.alt=p.name;img.src=p.image;img.onerror=()=>img.replaceWith(placeholder());$('pimg').append(img);
+
+  let size=p.sizes.includes('M')?'M':p.sizes[0],qty=1;
+  p.sizes.forEach(s=>{
+    const b=document.createElement('button');b.type='button';b.className='size';b.textContent=s;
+    b.setAttribute('aria-pressed',s===size);
+    b.onclick=()=>{size=s;[...$('sizes').children].forEach(c=>c.setAttribute('aria-pressed',c===b));};
+    $('sizes').append(b);
+  });
+  $('minus').onclick=()=>{qty=Math.max(1,qty-1);$('qv').textContent=qty;};
+  $('plus').onclick=()=>{qty=Math.min(10,qty+1);$('qv').textContent=qty;};
+  $('add').onclick=()=>{Cart.add(p.id,size,qty);toast(p.name+' added to your bag');};
+  $('buy').onclick=()=>{location.href='checkout.html?buy='+p.id+'&size='+encodeURIComponent(size)+'&qty='+qty;};
+
+  products.filter(x=>x.id!==p.id).slice(0,4).forEach(o=>{
+    const a=document.createElement('a');a.href='product.html?id='+o.id;a.className='rel';
+    const f=document.createElement('div');f.className='pimg';
+    const im=new Image();im.alt=o.name;im.loading='lazy';im.src=o.image;im.onerror=()=>im.replaceWith(placeholder());f.append(im);
+    const n=document.createElement('p');n.textContent=o.name;
+    const pr=document.createElement('p');pr.className='price';pr.textContent=money(o.price);
+    a.append(f,n,pr);$('related').append(a);
+  });
+})();
+</script></body></html>

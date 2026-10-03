@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Your profile — Shutter &amp; Lace</title><link rel="stylesheet" href="style.css"></head>
+<body class="setup-page">
+<div class="setup">
+  <a class="logo" href="/">Shutter <i>&amp;</i> Lace</a>
+  <form id="f" novalidate>
+    <h1 id="title">Complete your profile</h1><p class="sub" id="sub">We use these details for your orders and delivery.</p>
+    <div class="setup-grid">
+      <div class="photo-col">
+        <div class="portrait big" id="preview" aria-label="Profile photo preview">+</div>
+        <label class="btn" for="file">Choose photo</label>
+        <input id="file" type="file" accept="image/*" hidden>
+        <p class="hint">Square photos look best.</p>
+      </div>
+      <div class="fields">
+        <label>Full name<input id="full_name" autocomplete="name" required></label>
+        <label>Username<input id="username" autocomplete="username" required></label>
+        <label>Phone number<input id="phone" type="tel" autocomplete="tel" required></label>
+        <label>Email<input id="email" type="email" readonly></label>
+        <label class="span2">Street address<input id="address" autocomplete="street-address" required></label>
+        <label>City<input id="city" autocomplete="address-level2" required></label>
+        <label>Postal code<input id="postal_code" autocomplete="postal-code" required></label>
+        <label>Country<input id="country" autocomplete="country-name" required></label>
+        <p class="msg span3" id="msg" role="alert"></p>
+        <button class="btn fill span3" id="save" type="submit">Save and continue</button>
+      </div>
+    </div>
+  </form>
+</div>
+<script>
+const $=id=>document.getElementById(id), msg=$('msg');
+const FIELDS=['full_name','username','phone','email','address','city','postal_code','country'];
+let photo='';
+function show(src){const p=$('preview');p.style.backgroundImage='url('+src+')';p.textContent='';}
+(async()=>{
+  const r=await fetch('/api/profile'); if(r.status===401) return location.href='login.html';
+  const p=await r.json();
+  if(p.profile_complete){$('title').textContent='Edit your profile';$('sub').textContent='Update your details any time.';$('save').textContent='Save changes';}
+  FIELDS.forEach(k=>{if(p[k]) $(k).value=p[k];});
+  if(p.photo){photo=p.photo;show(photo);}
+})();
+$('file').addEventListener('change',e=>{
+  const file=e.target.files[0]; if(!file) return;
+  const img=new Image(), url=URL.createObjectURL(file);
+  img.onload=()=>{
+    const s=Math.min(img.width,img.height), c=document.createElement('canvas'); c.width=c.height=320;
+    c.getContext('2d').drawImage(img,(img.width-s)/2,(img.height-s)/2,s,s,0,0,320,320);
+    photo=c.toDataURL('image/jpeg',.85); show(photo); URL.revokeObjectURL(url);
+  };
+  img.onerror=()=>{msg.textContent='That file could not be read as an image.';};
+  img.src=url;
+});
+$('f').addEventListener('submit',async e=>{
+  e.preventDefault(); msg.textContent='';
+  const body={photo}; FIELDS.forEach(k=>body[k]=$(k).value);
+  const r=await fetch('/api/profile',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  const d=await r.json();
+  if(r.ok) location.href=d.redirect; else msg.textContent=d.error||'Something went wrong.';
+});
+</script></body></html>

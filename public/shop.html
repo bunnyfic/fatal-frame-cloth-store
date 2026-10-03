@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dresses — Shutter &amp; Lace</title><link rel="stylesheet" href="style.css"></head>
+<body class="plain shop-page">
+<header class="topbar">
+  <a class="logo" href="/">Shutter <i>&amp;</i> Lace</a>
+  <nav class="nav-side"><a href="dashboard.html">My account</a><a href="#" id="bagbtn">Bag (<span id="count">0</span>)</a><a href="#" id="out">Log out</a></nav>
+</header>
+<main class="shop">
+  <div class="shop-head"><h1>The dresses</h1><div class="ribbon-rule"></div><p>Lace, chiffon and ribbons for walking in the dark.</p></div>
+  <div class="products" id="products"></div>
+</main>
+<script src="cart.js"></script><script src="bag.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+function card(p){
+  const link='product.html?id='+p.id;
+  const el=document.createElement('article');el.className='product';
+  const fa=document.createElement('a');fa.href=link;fa.className='pimg';fa.setAttribute('aria-label','View '+p.name);
+  const img=new Image();img.alt=p.name;img.loading='lazy';img.src=p.image;img.onerror=()=>img.replaceWith(placeholder());
+  fa.append(img);
+  const h=document.createElement('h3');const ha=document.createElement('a');ha.href=link;ha.textContent=p.name;h.append(ha);
+  const d=document.createElement('p');d.className='pdesc';d.textContent=p.desc;
+  const price=document.createElement('p');price.className='price';price.textContent=money(p.price);
+  const sel=document.createElement('select');sel.setAttribute('aria-label','Size for '+p.name);
+  p.sizes.forEach(s=>{const o=document.createElement('option');o.value=o.textContent=s;sel.append(o);});
+  const row=document.createElement('div');row.className='prow';
+  const add=document.createElement('button');add.className='btn';add.textContent='Add to bag';
+  add.onclick=()=>{Cart.add(p.id,sel.value);toast(p.name+' added to your bag');};
+  const buy=document.createElement('button');buy.className='btn fill';buy.textContent='Buy now';
+  buy.onclick=()=>{location.href='checkout.html?buy='+p.id+'&size='+encodeURIComponent(sel.value);};
+  row.append(add,buy);
+  const meta=document.createElement('div');meta.className='pmeta';meta.append(price,sel);
+  el.append(fa,h,d,meta,row);return el;
+}
+$('out').onclick=e=>{e.preventDefault();fetch('/api/logout',{method:'POST'}).then(()=>location.href='/');};
+(async()=>{
+  const me=await fetch('/api/profile'); if(me.status===401) return location.href='login.html';
+  if(!(await me.json()).profile_complete) return location.href='profile-setup.html';
+  const products=await (await fetch('/api/products')).json();
+  products.forEach(p=>$('products').append(card(p)));
+  initBag(products);
+})();
+</script></body></html>
