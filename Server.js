@@ -30,6 +30,17 @@ function auth(req, res, next) {
   catch { res.status(401).json({ error: 'Please log in.' }); }
 }
 
+// Temporary diagnostic: open /api/health to see whether the database connects. Delete once everything works.
+app.get('/api/health', async (req, res) => {
+  const info = { db_client: process.env.DB_CLIENT || 'sqlite', has_database_url: !!process.env.DATABASE_URL, has_jwt_secret: !!process.env.JWT_SECRET };
+  try {
+    await db.query('SELECT 1 FROM users LIMIT 1');
+    res.json({ ...info, ok: true });
+  } catch (err) {
+    res.status(500).json({ ...info, ok: false, error: err.message });
+  }
+});
+
 app.post('/api/signup', async (req, res) => {
   const { username = '', email = '', password = '' } = req.body;
   if (username.trim().length < 2) return res.status(400).json({ error: 'Username must be at least 2 characters.' });
