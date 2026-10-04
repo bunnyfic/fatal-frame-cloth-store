@@ -1,0 +1,91 @@
+/* Homepage only. Loaded after style.css. */
+html{scroll-padding-top:4.5rem}
+body{overflow-x:clip}
+.rv{}
+.js .rv{opacity:0;transform:translateY(26px);transition:opacity 1s ease var(--d,0s),transform 1s ease var(--d,0s)}
+.js .rv.in{opacity:1;transform:none}
+
+/* fixed header: announcement + nav */
+.top{position:fixed;inset:0 0 auto 0;z-index:30;transition:background .35s,box-shadow .35s}
+.top.scrolled{background:rgba(30,21,32,.9);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 1px 0 rgba(211,170,177,.2)}
+.announce{height:2.3rem;font-size:.95rem;overflow:hidden;white-space:nowrap;padding:0 .8rem;text-overflow:ellipsis;transition:height .3s,opacity .3s}
+.top.scrolled .announce{height:0;opacity:0}
+.top .nav{position:relative;top:auto;padding:.9rem clamp(1rem,5vw,4rem)}
+
+/* hero */
+.hero{background:none;min-height:100vh;min-height:100svh;padding-top:8rem}
+.hero-bg{position:absolute;inset:-8% 0;background:url(images/shrine.jpg) center 28%/cover;will-change:transform}
+.hero-shade{position:absolute;inset:0;background:
+  radial-gradient(ellipse at 50% 40%,transparent 25%,rgba(14,8,16,.8) 100%),
+  linear-gradient(to top,rgba(30,21,32,.97) 4%,rgba(30,21,32,.2) 58%,rgba(30,21,32,.65))}
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;
+  background:radial-gradient(circle at 88% 8%,rgba(163,34,47,.28),transparent 38%),radial-gradient(circle at 8% 92%,rgba(122,85,102,.25),transparent 40%)}
+.mist{position:absolute;left:-30%;right:-30%;height:46%;pointer-events:none;filter:blur(30px);opacity:.5;
+  background:radial-gradient(ellipse at center,rgba(220,205,225,.22),transparent 65%)}
+.mist.a{bottom:6%;animation:drift 38s ease-in-out infinite alternate}
+.mist.b{bottom:-6%;opacity:.4;animation:drift 52s ease-in-out infinite alternate-reverse}
+@keyframes drift{from{transform:translateX(-8%)}to{transform:translateX(8%)}}
+#motes{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hero-inner{position:relative;z-index:2}
+.hero h1{font-size:clamp(3.2rem,10vw,7rem);line-height:1.02;text-shadow:0 0 40px rgba(163,34,47,.45),0 2px 18px rgba(0,0,0,.6)}
+.hero p{text-shadow:0 1px 12px rgba(0,0,0,.7)}
+.vf{z-index:1}
+.scroll-cue{position:absolute;z-index:2;left:50%;bottom:1.2rem;transform:translateX(-50%);font-style:italic;font-size:.95rem;opacity:.7;text-decoration:none;text-align:center}
+.scroll-cue::after{content:"";display:block;width:1px;height:2.2rem;margin:.4rem auto 0;background:linear-gradient(var(--rose),transparent);animation:cue 2.4s ease-in-out infinite}
+@keyframes cue{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+.intro-band{background-attachment:scroll}
+.tile{box-shadow:0 22px 46px rgba(0,0,0,.5)}
+
+/* new arrivals */
+.arrivals{background:var(--ink);text-align:center}
+.arrival-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2rem 1.5rem;max-width:72rem;margin:0 auto 2.6rem;text-align:left}
+.arrival{text-decoration:none;display:block}
+.arrival .pimg{position:relative;aspect-ratio:3/4;background:var(--plum);overflow:hidden;box-shadow:0 16px 34px rgba(0,0,0,.5)}
+.arrival .pimg img{width:100%;height:100%;object-fit:cover;filter:saturate(.85) contrast(1.05);transition:transform 1s ease}
+.arrival:hover .pimg img{transform:scale(1.05)}
+.arrival .pimg::after{content:"";position:absolute;inset:.55rem;border:1px solid rgba(243,233,230,.4);pointer-events:none}
+.arrival h3{font-family:var(--serif);font-size:1.2rem;margin:.9rem 0 .1rem;text-shadow:none}
+.arrival .price{font-size:1.15rem;color:var(--rose)}
+
+/* lookbook film reel */
+.lookbook{padding-inline:0;background:var(--plum);text-align:center}
+.lookbook .hint{margin-bottom:1.6rem;opacity:.7}
+.film{position:relative;background:#0e090f;padding:2.2rem 0;border-block:1px solid rgba(211,170,177,.2)}
+.film::before,.film::after{content:"";position:absolute;left:0;right:0;height:.65rem;z-index:1;pointer-events:none;
+  background:repeating-linear-gradient(90deg,rgba(243,233,230,.75) 0 .8rem,transparent .8rem 1.5rem);border-radius:2px;opacity:.55}
+.film::before{top:.7rem}.film::after{bottom:.7rem}
+.reel{display:flex;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding:.6rem clamp(1rem,5vw,4rem);scrollbar-width:thin;scrollbar-color:var(--mauve) transparent;-webkit-overflow-scrolling:touch}
+.frame{flex:0 0 auto;width:min(15rem,62vw);scroll-snap-align:center;margin:0;position:relative;aspect-ratio:3/4;background:#000;overflow:hidden}
+.frame img{width:100%;height:100%;object-fit:cover;filter:saturate(.8) contrast(1.08) sepia(.12)}
+.frame figcaption{position:absolute;left:0;right:0;bottom:0;padding:1.4rem .8rem .6rem;text-align:left;font-style:italic;font-size:.95rem;background:linear-gradient(to top,rgba(0,0,0,.85),transparent)}
+.frame figcaption b{font-style:normal;color:var(--rose);margin-right:.4rem}
+
+.story img{width:100%}
+.story h2{margin-bottom:.8rem}
+
+/* footer */
+.foot{background:#150e17;padding:3.5rem clamp(1.2rem,5vw,4rem) 2rem;border-top:1px solid rgba(211,170,177,.2)}
+.foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:2.5rem;max-width:72rem;margin:0 auto 2.5rem}
+.foot h4{font-family:var(--serif);font-size:1.1rem;font-style:italic;color:var(--rose);margin-bottom:.8rem;font-weight:400}
+.foot a{display:block;text-decoration:none;opacity:.85;padding:.15rem 0}.foot a:hover{color:var(--rose)}
+.foot p{opacity:.75;max-width:24rem}
+.foot .logo{display:inline-block;margin-bottom:.6rem}
+.foot-bottom{max-width:72rem;margin:0 auto;padding-top:1.4rem;border-top:1px solid rgba(211,170,177,.15);font-size:.95rem;opacity:.6;text-align:center}
+
+@media(max-width:760px){
+  .announce{font-size:.85rem}
+  .top .nav{grid-template-columns:1fr auto;padding-block:.7rem}
+  .logo{font-size:2rem}
+  .nav-side.r{gap:.9rem;font-size:1.05rem}
+  .hero{padding-top:7rem}
+  .hero .btn{display:block;text-align:center}
+  .hero .btn+.btn{margin:.7rem 0 0}
+  .hero p{font-size:1.15rem}
+  .hero-bg{inset:-4% 0;background-position:50% 22%}
+  .scroll-cue{display:none}
+  .foot-grid{grid-template-columns:1fr;gap:1.8rem}
+  .trust{grid-template-columns:1fr 1fr}
+}
+@media(prefers-reduced-motion:reduce){.mist,.scroll-cue::after{animation:none!important}.js .rv{opacity:1;transform:none}}
+[hidden]{display:none!important}
