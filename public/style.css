@@ -1,6 +1,8 @@
+@font-face{font-family:'Pinyon Script';font-style:normal;font-weight:400;font-display:swap;
+  src:url(fonts/pinyon-script-latin-400-normal.woff2) format('woff2'),url(fonts/pinyon-script-latin-400-normal.woff) format('woff')}
 :root{
   --ink:#1e1520; --plum:#33243a; --mauve:#7a5566; --rose:#d3aab1; --lace:#f3e9e6; --ribbon:#a3222f; --bar:2.4rem;
-  --script:'Apple Chancery','Monotype Corsiva','Lucida Calligraphy','URW Chancery L','Segoe Script','Times New Roman',serif; --serif:'Times New Roman',Times,serif;
+  --script:'Pinyon Script','Apple Chancery','Monotype Corsiva','Lucida Calligraphy','URW Chancery L','Times New Roman',serif; --serif:'Times New Roman',Times,serif;
 }
 *{box-sizing:border-box;margin:0}
 html{scroll-behavior:smooth}
