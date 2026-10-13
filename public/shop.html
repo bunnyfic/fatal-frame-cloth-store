@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Dresses — Shutter &amp; Lace</title><link rel="stylesheet" href="style.css"><script src="analytics.js"></script></head>
+<title>Dresses — Shutter &amp; Lace</title><link rel="stylesheet" href="style.css"><script>window.track=function(){};window.gaItem=function(){return{}};</script><script src="analytics.js"></script></head>
 <body class="plain shop-page">
 <header class="topbar">
   <a class="logo" href="/">Shutter <i>&amp;</i> Lace</a>
@@ -31,6 +31,8 @@ function card(p){
   buy.onclick=()=>{location.href='checkout.html?buy='+p.id+'&size='+encodeURIComponent(sel.value);};
   row.append(add,buy);
   const meta=document.createElement('div');meta.className='pmeta';meta.append(price,sel);
+  const pick=()=>track('select_item',{item_list_name:'Shop',items:[gaItem(p)]});
+  fa.addEventListener('click',pick);ha.addEventListener('click',pick);
   el.append(fa,h,d,meta,row);return el;
 }
 $('out').onclick=e=>{e.preventDefault();fetch('/api/logout',{method:'POST'}).then(()=>location.href='/');};
@@ -39,6 +41,7 @@ $('out').onclick=e=>{e.preventDefault();fetch('/api/logout',{method:'POST'}).the
   if(!(await me.json()).profile_complete) return location.href='profile-setup.html';
   const products=await (await fetch('/api/products')).json();
   products.forEach(p=>$('products').append(card(p)));
+  track('view_item_list',{item_list_name:'Shop',items:products.map(p=>gaItem(p))});
   initBag(products);
 })();
 </script></body></html>
