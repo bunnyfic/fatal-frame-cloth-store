@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Dress — Shutter &amp; Lace</title><link rel="stylesheet" href="style.css"><script src="analytics.js"></script></head>
+<title>Dress — Shutter &amp; Lace</title><link rel="stylesheet" href="style.css"><script>window.GA_DEFER_PAGEVIEW=true;</script>
+<script>window.sendPageView=function(){};window.track=function(){};window.gaItem=function(){return{}};</script><script src="analytics.js"></script></head>
 <body class="plain shop-page">
 <header class="topbar">
   <a class="logo" href="/">Shutter <i>&amp;</i> Lace</a>
@@ -35,8 +36,8 @@ const id=parseInt(new URLSearchParams(location.search).get('id'),10);
   const products=await (await fetch('/api/products')).json();
   initBag(products);
   const p=products.find(x=>x.id===id);
-  if(!p){$('main').innerHTML='<p class="empty">We could not find that dress.</p><a class="btn fill" href="shop.html">Back to the dresses</a>';return;}
-  document.title=p.name+' \u2014 Shutter & Lace';
+  if(!p){$('main').innerHTML='<p class="empty">We could not find that dress.</p><a class="btn fill" href="shop.html">Back to the dresses</a>';sendPageView();return;}
+  document.title=p.name+' \u2014 Shutter & Lace';sendPageView();
   track('view_item',{currency:'USD',value:p.price/100,items:[gaItem(p)]});
   $('pname').textContent=p.name;$('pprice').textContent=money(p.price);$('pdesc').textContent=p.desc;
   const img=new Image();img.alt=p.name;img.src=p.image;img.onerror=()=>img.replaceWith(placeholder());$('pimg').append(img);
@@ -59,6 +60,7 @@ const id=parseInt(new URLSearchParams(location.search).get('id'),10);
     const im=new Image();im.alt=o.name;im.loading='lazy';im.src=o.image;im.onerror=()=>im.replaceWith(placeholder());f.append(im);
     const n=document.createElement('p');n.textContent=o.name;
     const pr=document.createElement('p');pr.className='price';pr.textContent=money(o.price);
+    a.addEventListener('click',()=>track('select_item',{item_list_name:'Related dresses',items:[gaItem(o)]}));
     a.append(f,n,pr);$('related').append(a);
   });
 })();
